@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
@@ -17,12 +16,7 @@ import static java.util.Map.Entry.comparingByValue;
 public class SearchInFolder {
     public static void main(String[] args) {
         System.out.println("Добро пожаловать в DiskAnalyzer!");
-
         mainChoize();
-
-
-
-
         //"C:\\ESD"
     }
 
@@ -54,15 +48,15 @@ public class SearchInFolder {
                     System.out.println(finishLetter);
                     break;
                 case (2):
-                    topFivebiggestFile(path);
+                    writeTopFiveBiggestFiles(path);
                     System.out.println(finishLetter);
                     break;
                 case (3):
-                    averageFilesSize(path);
+                    writeAverageSizeOfFiles(path);
                     System.out.println(finishLetter);
                     break;
                 case (4):
-                    numberOfFileAndFolders(path);
+                    writenNumberOfFileAndFoldersWithSameFirstLetter(path);
                     System.out.println(finishLetter);
                     break;
                 default:
@@ -74,7 +68,7 @@ public class SearchInFolder {
         }
     }
 
-    private static void numberOfFileAndFolders(String path) {
+    private static void writenNumberOfFileAndFoldersWithSameFirstLetter(String path) {
         try {
             Files.walk(Paths.get(path))
                     .collect(Collectors.groupingBy(e->e.toFile().getName().substring(0, 1).toLowerCase(Locale.ROOT), Collectors.counting()))
@@ -87,18 +81,24 @@ public class SearchInFolder {
 
     }
 
-    private static void averageFilesSize(String path) {
+    private static void writeAverageSizeOfFiles(String path) {
         try(FileWriter writer = new FileWriter("C:\\Users\\Igorj\\Desktop\\Стажер\\ " +
                 "WorkingWithFiles\\src\\task2.txt")) {
            OptionalDouble average = Files.walk(Paths.get(path)).filter(Files::isRegularFile)
                    .mapToLong(e->e.toFile().length()).average();
-            writer.write("Средний размер файла в данном каталоге составляет: "+average.getAsDouble());
+           if(average.isPresent()){
+               writer.write("Средний размер файла в данном каталоге составляет: "+average.getAsDouble());
+           }else
+           {
+               writer.write("В данном каталоге нет файлов!");
+           }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void topFivebiggestFile(String path) {
+    private static void writeTopFiveBiggestFiles(String path) {
         try(FileWriter writer = new FileWriter("C:\\Users\\Igorj\\Desktop\\Стажер\\ " +
                 "WorkingWithFiles\\src\\task2.txt"))
         {
@@ -137,7 +137,10 @@ public class SearchInFolder {
         {
             // запись всей строки
 
-            File fileWithMaxS = processFilesFromFolder(new File(path), 0);
+            File fileWithMaxS = getMaxSFile(new File(path), 0);
+            if(fileWithMaxS==null){
+                System.out.println("Нет файлов с буквой S");
+            }
             //System.out.println(fileWithMaxS.getAbsolutePath());
             String text = "Больше всего символов S в названиях" +
                     " файлов расположены в файле: "+fileWithMaxS.getAbsolutePath();
@@ -148,7 +151,7 @@ public class SearchInFolder {
         }
     }
 
-    public static File processFilesFromFolder(File folder,int maxS)
+    public static File getMaxSFile(File folder, int maxS)
     {
         File maxSFile = null;
         File[] folderEntries = folder.listFiles();
@@ -156,8 +159,9 @@ public class SearchInFolder {
         {
             if (entry.isDirectory())
             {
-                maxSFile=processFilesFromFolder(entry, maxS);
-               maxS=howManySInWord(maxSFile.getName());
+                maxSFile= getMaxSFile(entry, maxS);
+                if(maxSFile==null){continue;}
+                maxS = howManySInWord(maxSFile.getName());
                 continue;
             }
             int countS=howManySInWord(entry.getName());

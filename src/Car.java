@@ -2,7 +2,7 @@ import java.io.Serializable;
 
 public class Car implements Serializable {
     private String brand;
-    private String model;
+    private transient String model;
     private transient int countOfDoors;
     private Person person;
 
@@ -45,12 +45,12 @@ public class Car implements Serializable {
         this.countOfDoors = countOfDoors;
     }
 
-    @Override
-    public String toString() {
-        return "Car{" +
-                "brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", countOfDoors=" + countOfDoors +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Car{" +
+//                "brand='" + brand + '\'' +
+//                ", model='" + model + '\'' +
+//                ", countOfDoors=" + countOfDoors +
+//                '}';
+//    }
 }
