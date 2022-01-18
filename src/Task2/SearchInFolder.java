@@ -92,7 +92,6 @@ public class SearchInFolder {
            {
                writer.write("В данном каталоге нет файлов!");
            }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,27 +115,13 @@ public class SearchInFolder {
         catch(IOException ex){
             System.out.println(ex.getMessage());
         }
-
     }
 
-//    public static void maxSwithStream(){
-//        Files.walk(Paths.get("C:\\ESD")).filter(Files::isRegularFile).sorted((o1, o2) -> {
-//            long compare = o2-o1.getValue();
-//            if(compare==0){
-//                return o1.getKey().compareTo(o2.getKey());
-//            }
-//            return (int) compare;
-//        })
-//    }
-
-
     public static void maximumNumberOfLettersS(String path){
-
         try(FileWriter writer = new FileWriter("C:\\Users\\Igorj\\Desktop\\Стажер\\ " +
                 "WorkingWithFiles\\src\\task2.txt"))
         {
             // запись всей строки
-
             File fileWithMaxS = getMaxSFile(new File(path), 0);
             if(fileWithMaxS==null){
                 System.out.println("Нет файлов с буквой S");
@@ -169,7 +154,6 @@ public class SearchInFolder {
                 maxS=countS;
                 maxSFile=entry;
             }
-            // иначе вам попался файл, обрабатывайте его!
         }
         return maxSFile;
     }
